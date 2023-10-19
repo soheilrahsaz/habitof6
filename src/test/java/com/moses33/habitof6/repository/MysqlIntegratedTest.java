@@ -2,6 +2,7 @@ package com.moses33.habitof6.repository;
 
 
 import com.moses33.habitof6.domain.User;
+import com.moses33.habitof6.repository.security.RoleRepository;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -26,6 +27,8 @@ class MysqlIntegratedTest {
 
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    RoleRepository roleRepository;
 
     @Test
     void testPrimaryPersist() {
@@ -42,11 +45,11 @@ class MysqlIntegratedTest {
 
         assertThat(savedUser.getId()).isNotNull();
 
-        savedUser.setFirstName("khiar");
-
         //test version is updated
         assertThat(savedUser.getVersion()).isZero();
+        savedUser.setFirstName("khiar");
         User savedUser2 = userRepository.saveAndFlush(savedUser);
+
         assertThat(savedUser2.getVersion()).isEqualTo(1);
     }
 
