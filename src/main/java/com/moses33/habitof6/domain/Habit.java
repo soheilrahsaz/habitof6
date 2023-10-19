@@ -15,7 +15,7 @@ import org.hibernate.validator.constraints.Length;
 @Getter
 @Setter
 @Entity
-public class Habit extends BaseEntity{
+public class Habit extends FullEntity{
 
     @Length(max = 128)
     @NotEmpty

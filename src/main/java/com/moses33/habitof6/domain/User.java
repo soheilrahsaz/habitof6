@@ -15,13 +15,14 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class User extends BaseEntity{
+public class User extends FullEntity{
 
     @Length(max = 32)
     @NotEmpty
     private String username;
 
-    @Length(max = 32)
+    @Length(max = 60)
+    @NotEmpty
     private String password;
 
     @Length(max = 64)

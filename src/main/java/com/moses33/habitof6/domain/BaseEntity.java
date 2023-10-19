@@ -1,7 +1,13 @@
 package com.moses33.habitof6.domain;
 
-import jakarta.persistence.*;
-import lombok.*;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.MappedSuperclass;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.Objects;
 
@@ -28,5 +34,9 @@ public class BaseEntity {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    public boolean isNew() {
+        return this.id == null;
     }
 }
