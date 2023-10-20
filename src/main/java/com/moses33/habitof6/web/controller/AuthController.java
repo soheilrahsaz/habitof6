@@ -7,6 +7,7 @@ import com.moses33.habitof6.web.dto.UserInfoDto;
 import com.moses33.habitof6.web.response.BaseResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +19,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    public BaseResponse<Boolean> login(@RequestBody LoginDto loginDto, HttpServletRequest request, HttpServletResponse response)
+    public BaseResponse<Boolean> login(@RequestBody @Valid LoginDto loginDto, HttpServletRequest request, HttpServletResponse response)
     {
         authService.login(loginDto, request, response);
         return new BaseResponse<>(true);

@@ -9,15 +9,15 @@ import org.springframework.http.ResponseEntity;
 
 public class BaseResponse<T> extends ResponseEntity<BaseResponseBody<T>> {
     public BaseResponse(HttpStatusCode status) {
-        this((T) null, status);
+        this(null,null, status);
     }
 
     public BaseResponse(T result) {
-        this(result, HttpStatus.OK);
+        this(null, result, HttpStatus.OK);
     }
 
-    public BaseResponse(T result, HttpStatusCode status) {
-        super(new BaseResponseBody<>(result, null), status);
+    public BaseResponse(String error, T result, HttpStatusCode status) {
+        super(new BaseResponseBody<>(result, error), status);
     }
 
     public BaseResponse(String error, HttpStatusCode status) {
