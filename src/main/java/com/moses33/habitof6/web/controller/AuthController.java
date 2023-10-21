@@ -27,7 +27,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public BaseResponse<Boolean> register(@RequestBody RegisterUserDto registerUserDto, HttpServletRequest request, HttpServletResponse response)
+    public BaseResponse<Boolean> register(@RequestBody @Valid RegisterUserDto registerUserDto, HttpServletRequest request, HttpServletResponse response)
     {
         authService.register(registerUserDto, request, response);
         return new BaseResponse<>(true);
