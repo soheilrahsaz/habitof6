@@ -6,7 +6,6 @@ import com.moses33.habitof6.web.dto.LoginDto;
 import com.moses33.habitof6.web.dto.RegisterUserDto;
 import jakarta.transaction.Transactional;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.aspectj.lang.annotation.Before;
 import org.hamcrest.core.Is;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -38,7 +37,7 @@ class SecurityTest extends BaseTest {
     @Commit
     @BeforeEach
     void setupUser() {
-        if (userRepository.findByUsername(username1).isEmpty()) {
+        if (userRepository.findWithRolesByUsername(username1).isEmpty()) {
             userRepository.saveAndFlush(User.builder()
                     .username(username1)
                     .email(email1)
