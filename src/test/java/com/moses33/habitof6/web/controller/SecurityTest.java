@@ -4,12 +4,16 @@ import com.moses33.habitof6.domain.User;
 import com.moses33.habitof6.repository.UserRepository;
 import com.moses33.habitof6.web.dto.LoginDto;
 import com.moses33.habitof6.web.dto.RegisterUserDto;
+import jakarta.transaction.Transactional;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.aspectj.lang.annotation.Before;
 import org.hamcrest.core.Is;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.test.context.support.TestExecutionEvent;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.annotation.Commit;
 
@@ -32,6 +36,7 @@ class SecurityTest extends BaseTest {
     }
 
     @Commit
+    @BeforeEach
     void setupUser() {
         if (userRepository.findByUsername(username1).isEmpty()) {
             userRepository.saveAndFlush(User.builder()
@@ -52,7 +57,6 @@ class SecurityTest extends BaseTest {
 
     @Test
     void testValidLogin() throws Exception {
-        setupUser();
         LoginDto loginDto = new LoginDto(username1, password1);
         mockMvc.perform(myPost("/login")
                 .content(objectMapper.writeValueAsString(loginDto))
@@ -60,18 +64,20 @@ class SecurityTest extends BaseTest {
     }
 
     @Test
+    @Transactional
+    @Commit
     void testValidRegister() throws Exception {
         RegisterUserDto registerUserDto = new RegisterUserDto(RandomStringUtils.randomAlphabetic(32), RandomStringUtils.randomAlphabetic(32),
                 RandomStringUtils.randomAlphabetic(32) + "@testmail.com");
         mockMvc.perform(myPost("/register")
                         .content(objectMapper.writeValueAsString(registerUserDto)))
                 .andExpect(status().isOk());
+        userRepository.deleteByUsername(registerUserDto.getUsername());
     }
 
     @Test
     void testDuplicateUsernameRegister() throws Exception {
-        setupUser();
-        
+
         RegisterUserDto registerUserDto = new RegisterUserDto(username1, RandomStringUtils.randomAlphabetic(32),
                 RandomStringUtils.randomAlphabetic(32) + "@testmail.com");
         
@@ -83,7 +89,6 @@ class SecurityTest extends BaseTest {
     
     @Test
     void testDuplicateEmailRegister() throws Exception {
-        setupUser();
         
         RegisterUserDto registerUserDto = new RegisterUserDto(RandomStringUtils.randomAlphabetic(32), RandomStringUtils.randomAlphabetic(32),
                  email1);
@@ -101,16 +106,16 @@ class SecurityTest extends BaseTest {
     }
 
     @Test
-    @WithUserDetails(username1)
+    @WithUserDetails(value = username1, setupBefore = TestExecutionEvent.TEST_EXECUTION)
     void testValidGetUserInfo() throws Exception {
-        setupUser();
+
         mockMvc.perform(myGet("/getUserInfo"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.result.username", Is.is(username1)));
     }
 
     @Test
-    @WithUserDetails(username1)
+    @WithUserDetails(value = username1, setupBefore = TestExecutionEvent.TEST_EXECUTION)
     void testLogout() throws Exception {
         mockMvc.perform(myGet("/logout"))
                 .andExpect(status().isOk());

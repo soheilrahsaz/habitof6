@@ -41,6 +41,6 @@ class AuthServiceValidationTest extends BaseTest{
                         .content(objectMapper.writeValueAsString(registerUserDto))
                 ).andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.error", Is.is("InvalidInput")))
-                .andExpect(jsonPath("$.result.size()", Is.is(2)));
+                .andExpect(jsonPath("$.result.size()", Is.is(3)));
     }
 }

@@ -38,7 +38,7 @@ public class ExceptionController {
                 .stream()
                 .collect(Collectors.groupingBy(c -> c.getPropertyPath().toString(), Collectors.mapping(ConstraintViolation::getMessage, Collectors.toList())));
 
-        return new BaseResponse<>("InvalidInput", exceptionResults, HttpStatus.BAD_REQUEST);
+        return new BaseResponse<>("InvalidDBInput", exceptionResults, HttpStatus.BAD_REQUEST);
     }
 
 }
