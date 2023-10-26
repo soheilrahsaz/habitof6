@@ -25,7 +25,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class AuthServiceImpl implements AuthService {
+public class AuthServiceImpl extends BaseService implements AuthService {
 
     private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
@@ -70,18 +70,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public UserInfoDto getUserInfo() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication == null)
-        {
-            throw new UserFriendlyException("Not logged in");
-        }
-
-        if(!(authentication.getPrincipal() instanceof User))
-        {
-            throw new IllegalArgumentException("authentication is not an instanceof User");
-        }
-
-        return userInfoMapper.userToUserInfoDto((User)authentication.getPrincipal());
+        return userInfoMapper.userToUserInfoDto(getLoggedInUser());
     }
 
     @Override
