@@ -2,6 +2,7 @@ package com.moses33.habitof6.web.controller;
 
 import com.moses33.habitof6.domain.User;
 import com.moses33.habitof6.repository.UserRepository;
+import com.moses33.habitof6.repository.security.RoleRepository;
 import com.moses33.habitof6.web.dto.LoginDto;
 import com.moses33.habitof6.web.dto.RegisterUserDto;
 import jakarta.transaction.Transactional;
@@ -25,7 +26,9 @@ class SecurityTest extends BaseTest {
     @Autowired
     UserRepository userRepository;
 
-    final String username1 = "username1__test";
+    @Autowired
+    RoleRepository roleRepository;
+
     final String password1 = "123456";
     final String email1 = "test@test.com";
 
@@ -41,6 +44,7 @@ class SecurityTest extends BaseTest {
             userRepository.saveAndFlush(User.builder()
                     .username(username1)
                     .email(email1)
+                    .role(roleRepository.findByName("ROLE_USER").orElseThrow())
                     .password(new BCryptPasswordEncoder().encode(password1))
                     .build());
         }

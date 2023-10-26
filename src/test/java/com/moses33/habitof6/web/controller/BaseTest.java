@@ -21,6 +21,7 @@ public abstract class BaseTest {
     ObjectMapper objectMapper;
     protected MockMvc mockMvc;
 
+    final String username1 = "username1__test";
     @BeforeEach
     public void setup() {
         mockMvc = MockMvcBuilders
@@ -29,9 +30,13 @@ public abstract class BaseTest {
                 .build();
     }
 
-    public MockHttpServletRequestBuilder myPost(String urlTemplate, Object... uriVariables)
+    public MockHttpServletRequestBuilder myPostSimple(Object... uriVariables)
     {
-        return setDefaultConfigs(MockMvcRequestBuilders.post(getApiBasePath() + urlTemplate, uriVariables));
+        return setDefaultConfigs(MockMvcRequestBuilders.post(getApiBasePath(), uriVariables));
+    }
+    public MockHttpServletRequestBuilder myPost(String extraPart, Object... uriVariables)
+    {
+        return setDefaultConfigs(MockMvcRequestBuilders.post(getApiBasePath() + extraPart, uriVariables));
     }
 
     public MockHttpServletRequestBuilder myGet(String urlTemplate, Object... uriVariables)
