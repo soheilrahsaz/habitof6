@@ -1,9 +1,5 @@
-package com.moses33.habitof6.domain;
+package com.moses33.habitof6.web.dto;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -11,13 +7,12 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 import org.hibernate.validator.constraints.Length;
 
-@Getter
 @Setter
-@Entity
+@Getter
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-public class Habit extends FullEntity{
+@NoArgsConstructor
+public class HabitDto extends BaseDto{
 
     @Length(max = 128)
     @NotEmpty
@@ -28,14 +23,9 @@ public class Habit extends FullEntity{
     @NotEmpty
     private String colorHex;
 
-    @Enumerated(EnumType.STRING)
     @NotNull
-    private HabitDirection direction;
+    private HabitDirectionDto direction;
 
-    @Length(max = 13)
     private String days;
 
-    @ManyToOne
-    private User user;
 }
-

@@ -16,14 +16,17 @@ public class BaseResponse<T> extends ResponseEntity<BaseResponseBody<T>> {
         this(null, result, HttpStatus.OK);
     }
 
-    public BaseResponse(String error, T result, HttpStatusCode status) {
-        super(new BaseResponseBody<>(result, error), status);
+    public BaseResponse(T result, HttpStatusCode status) {
+        this(null, result, status);
     }
 
     public BaseResponse(String error, HttpStatusCode status) {
-        super(new BaseResponseBody<>(null, error), status);
+        this(error, null, status);
     }
 
+    public BaseResponse(String error, T result, HttpStatusCode status) {
+        super(new BaseResponseBody<>(result, error), status);
+    }
 }
 
 @Data
