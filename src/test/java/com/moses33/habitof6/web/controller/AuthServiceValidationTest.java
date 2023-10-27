@@ -26,7 +26,7 @@ class AuthServiceValidationTest extends BaseTest{
         mockMvc.perform(myPost("/login")
                         .content(objectMapper.writeValueAsString(loginDto))
                 ).andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.error", Is.is("InvalidInput")))
+                .andExpect(errorIs("InvalidInput"))
                 .andExpect(jsonPath("$.result.size()", Is.is(2)));
     }
 
@@ -40,7 +40,7 @@ class AuthServiceValidationTest extends BaseTest{
         mockMvc.perform(myPost("/register")
                         .content(objectMapper.writeValueAsString(registerUserDto))
                 ).andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.error", Is.is("InvalidInput")))
+                .andExpect(errorIs("InvalidInput"))
                 .andExpect(jsonPath("$.result.size()", Is.is(3)));
     }
 }
