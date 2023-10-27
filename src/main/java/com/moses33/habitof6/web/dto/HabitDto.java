@@ -1,7 +1,9 @@
 package com.moses33.habitof6.web.dto;
 
+import com.moses33.habitof6.web.validation.HabitDays;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
@@ -19,13 +21,14 @@ public class HabitDto extends BaseDto{
     private String name;
 
     @JdbcTypeCode(SqlTypes.CHAR)
-    @Length(min = 7, max = 7)
     @NotEmpty
+    @Pattern(regexp = "#\\d{6}")
     private String colorHex;
 
     @NotNull
     private HabitDirectionDto direction;
 
+    @HabitDays
     private String days;
 
 }

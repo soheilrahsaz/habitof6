@@ -58,5 +58,12 @@ class MapperTest {
         assertEquals(habitDto.getDays(), habit.getDays());
         assertEquals(habitDto.getDirection().toString(), habit.getDirection().toString());
 
+
+        HabitDto habitDto1 = new HabitDto();
+        habitDto1.setDays("5,4,3,2,1");
+
+        Habit habit1 = habitMapper.habitDtoToHabit(habitDto1);
+        assertEquals("1,2,3,4,5", habit1.getDays());
+
     }
 }
