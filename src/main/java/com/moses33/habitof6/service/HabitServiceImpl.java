@@ -19,7 +19,7 @@ public class HabitServiceImpl extends BaseService implements HabitService {
 
     @Override
     public Page<HabitDto> getHabits(PageRequest pageRequest) {
-        Page<Habit> habitPage = habitRepository.findAll(pageRequest);
+        Page<Habit> habitPage = habitRepository.findHabitsSecure(pageRequest);
 
         return new PageImpl<>(habitPage.getContent().stream().map(habitMapper::habitToHabitDto).toList(),
                 habitPage.getPageable(),

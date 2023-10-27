@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithUserDetails;
 
+import static org.hamcrest.Matchers.lessThanOrEqualTo;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -70,5 +71,15 @@ class HabitControllerTest extends BaseTest{
                 .andExpect(status().isBadRequest())
                 .andExpect(errorIs("InvalidInput"))
                 .andExpect(jsonPath("$.result.size()", Is.is(1)));
+    }
+
+    @Test
+    @WithUserDetails(username1)
+    void testGetHabits() throws Exception{
+        mockMvc.perform(myGetSimple()
+                .param("pageNumber", "0")
+                .param("pageSize", "5"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.result.content.size()", lessThanOrEqualTo(5)));
     }
 }

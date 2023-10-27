@@ -42,6 +42,11 @@ public abstract class BaseTest {
         return setDefaultConfigs(MockMvcRequestBuilders.post(getApiBasePath() + extraPart, uriVariables));
     }
 
+    public MockHttpServletRequestBuilder myGetSimple(Object... uriVariables)
+    {
+        return setDefaultConfigs(MockMvcRequestBuilders.get(getApiBasePath(), uriVariables));
+    }
+
     public MockHttpServletRequestBuilder myGet(String urlTemplate, Object... uriVariables)
     {
         return setDefaultConfigs(MockMvcRequestBuilders.get(getApiBasePath() + urlTemplate, uriVariables));
