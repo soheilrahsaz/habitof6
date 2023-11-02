@@ -1,5 +1,6 @@
 package com.moses33.habitof6.web.dto.habit;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,5 +13,6 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UpdateHabitDto extends CreateHabitDto{
+    @NotNull
     private Long version;
 }

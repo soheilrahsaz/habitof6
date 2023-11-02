@@ -21,24 +21,25 @@ public abstract class HabitMapper {
     public abstract HabitDto habitToHabitDto(Habit habit);
 
     public abstract Habit createHabitDtoToHabit(CreateHabitDto createHabitDto);
-    public abstract Habit updateHabitDtoToHabit(UpdateHabitDto updateHabitDto);
+
+    public abstract UpdateHabitDto habitToUpdateHabitDto(Habit habit);
+    public abstract Habit updateHabitFromUpdateHabitDto(UpdateHabitDto updateHabitDto, @MappingTarget Habit habit);
 
     @AfterMapping
     public void createHabitAfterMapping(CreateHabitDto createHabitDto, @MappingTarget Habit.HabitBuilder<?, ?> habitBuilder)
     {
-        orderDays(habitBuilder, createHabitDto.getDays());
+        habitBuilder.days(getOrderedDays(createHabitDto.getDays()));
     }
     @AfterMapping
-    public void updateHabitAfterMapping(UpdateHabitDto updateHabitDto, @MappingTarget Habit.HabitBuilder<?, ?> habitBuilder)
+    public void updateHabitAfterMapping(UpdateHabitDto updateHabitDto, @MappingTarget Habit habit)
     {
-        orderDays(habitBuilder, updateHabitDto.getDays());
+        habit.setDays(getOrderedDays(updateHabitDto.getDays()));
     }
 
-    private void orderDays(Habit.HabitBuilder<?, ?> habitBuilder, String days)
+    private String getOrderedDays(String days)
     {
-        habitBuilder.days(Arrays.stream(days.split(","))
+        return Arrays.stream(days.split(","))
                 .sorted()
-                .collect(Collectors.joining(",")));
+                .collect(Collectors.joining(","));
     }
-
 }

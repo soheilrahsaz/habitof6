@@ -1,9 +1,18 @@
 package com.moses33.habitof6.web.controller;
 
+import com.jayway.jsonpath.JsonPath;
+import com.moses33.habitof6.domain.Habit;
+import com.moses33.habitof6.domain.HabitDirection;
+import com.moses33.habitof6.repository.HabitRepository;
+import com.moses33.habitof6.repository.UserRepository;
 import com.moses33.habitof6.web.dto.habit.CreateHabitDto;
 import com.moses33.habitof6.web.dto.habit.HabitDirectionDto;
+import com.moses33.habitof6.web.dto.habit.UpdateHabitDto;
+import com.moses33.habitof6.web.mapper.HabitMapper;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.hamcrest.core.Is;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithUserDetails;
 
@@ -13,9 +22,34 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 class HabitControllerTest extends BaseTest{
+
+    @Autowired
+    HabitMapper habitMapper;
+
+    @Autowired
+    HabitRepository habitRepository;
+
+    @Autowired
+    UserRepository userRepository;
+
     @Override
     public String getApiBasePath() {
         return "/habit";
+    }
+
+    public Habit getTestHabit()
+    {
+        Habit habit = Habit.builder()
+                .name("TEST_HABIT__")
+                .colorHex("#658453")
+                .direction(HabitDirection.ASC)
+                .days("0,1,2,3")
+                .build();
+        return habitRepository.findByName(habit.getName())
+                .orElseGet(() -> {
+                    habit.setUser(userRepository.findWithRolesByUsername(username1).orElseThrow());
+                    return habitRepository.save(habit);
+                });
     }
 
     @Test
@@ -27,9 +61,12 @@ class HabitControllerTest extends BaseTest{
                 .direction(HabitDirectionDto.ASC)
                 .days("0,1,2,3")
                 .build();
-        mockMvc.perform(myPostSimple()
-                .content(objectMapper.writeValueAsString(habitDto)))
-                .andExpect(status().isCreated());
+        String contentAsString = mockMvc.perform(myPostSimple()
+                        .content(objectMapper.writeValueAsString(habitDto)))
+                .andExpect(status().isCreated())
+                .andReturn().getResponse().getContentAsString();
+        Integer habitId = JsonPath.read(contentAsString, "$.result.id");
+        habitRepository.deleteById(habitId);
     }
 
     @Test
@@ -81,5 +118,33 @@ class HabitControllerTest extends BaseTest{
                 .param("pageSize", "5"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.result.content.size()", lessThanOrEqualTo(5)));
+    }
+
+    @Test
+    @WithUserDetails(username1)
+    void testUpdateHabit() throws Exception {
+        Habit habit = getTestHabit();
+        UpdateHabitDto updateHabitDto = habitMapper.habitToUpdateHabitDto(habit);
+        updateHabitDto.setDays("0");
+        mockMvc.perform(myPut("/{habitId}", habit.getId())
+                .content(objectMapper.writeValueAsString(updateHabitDto)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.result.days", Is.is("0")));
+    }
+
+    @Test
+    @WithUserDetails(username1)
+    void testInvalidVersionWhileUpdatingHabit() throws Exception{
+        Habit habit = getTestHabit();
+        UpdateHabitDto updateHabitDto = habitMapper.habitToUpdateHabitDto(habit);
+
+        habit.setColorHex("#"+ RandomStringUtils.randomNumeric(6));
+        habitRepository.save(habit);//version is updated
+
+        updateHabitDto.setColorHex("#"+ RandomStringUtils.randomNumeric(6));
+        mockMvc.perform(myPut("/{habitId}", habit.getId())
+                        .content(objectMapper.writeValueAsString(updateHabitDto)))
+                .andExpect(status().isBadRequest());
+
     }
 }

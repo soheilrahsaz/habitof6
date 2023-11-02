@@ -3,6 +3,7 @@ package com.moses33.habitof6.web.exception;
 import com.moses33.habitof6.web.response.BaseResponse;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -20,6 +21,12 @@ public class ExceptionController {
     public BaseResponse<Object> handleUserFriendlyException(UserFriendlyException userFriendlyException)
     {
         return new BaseResponse<>(userFriendlyException.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(OptimisticLockingFailureException.class)
+    public BaseResponse<Object> handleOptimisticLockingFailureException(OptimisticLockingFailureException optimisticLockingFailureException)
+    {
+        return new BaseResponse<>(optimisticLockingFailureException.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

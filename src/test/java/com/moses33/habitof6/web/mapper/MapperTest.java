@@ -81,7 +81,8 @@ class MapperTest {
                 .days("5,4,2,3,1")
                 .build();
 
-        Habit fromUpdate = habitMapper.updateHabitDtoToHabit(updateHabitDto);
+        Habit fromUpdate = new Habit();
+        habitMapper.updateHabitFromUpdateHabitDto(updateHabitDto, fromUpdate);
         assertEquals("1,2,3,4,5", fromUpdate.getDays());
 
 
