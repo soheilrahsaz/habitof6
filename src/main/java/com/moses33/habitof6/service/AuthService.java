@@ -1,8 +1,8 @@
 package com.moses33.habitof6.service;
 
-import com.moses33.habitof6.web.dto.LoginDto;
-import com.moses33.habitof6.web.dto.RegisterUserDto;
-import com.moses33.habitof6.web.dto.UserInfoDto;
+import com.moses33.habitof6.web.dto.auth.LoginDto;
+import com.moses33.habitof6.web.dto.auth.RegisterUserDto;
+import com.moses33.habitof6.web.dto.auth.UserInfoDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 

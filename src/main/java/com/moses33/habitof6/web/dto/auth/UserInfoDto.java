@@ -1,4 +1,4 @@
-package com.moses33.habitof6.web.dto;
+package com.moses33.habitof6.web.dto.auth;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;

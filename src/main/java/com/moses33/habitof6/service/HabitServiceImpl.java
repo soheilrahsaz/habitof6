@@ -2,7 +2,8 @@ package com.moses33.habitof6.service;
 
 import com.moses33.habitof6.domain.Habit;
 import com.moses33.habitof6.repository.HabitRepository;
-import com.moses33.habitof6.web.dto.HabitDto;
+import com.moses33.habitof6.web.dto.habit.CreateHabitDto;
+import com.moses33.habitof6.web.dto.habit.HabitDto;
 import com.moses33.habitof6.web.mapper.HabitMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -27,10 +28,9 @@ public class HabitServiceImpl extends BaseService implements HabitService {
     }
 
     @Override
-    public HabitDto addHabit(HabitDto habitDto) {
+    public HabitDto addHabit(CreateHabitDto createHabitDto) {
 
-        Habit habit = habitMapper.habitDtoToHabit(habitDto);
-        habit.setId(null);
+        Habit habit = habitMapper.createHabitDtoToHabit(createHabitDto);
         habit.setUser(getLoggedInUser());
 
         return habitMapper.habitToHabitDto(habitRepository.save(habit));

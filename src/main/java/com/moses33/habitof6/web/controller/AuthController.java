@@ -1,9 +1,9 @@
 package com.moses33.habitof6.web.controller;
 
 import com.moses33.habitof6.service.AuthService;
-import com.moses33.habitof6.web.dto.LoginDto;
-import com.moses33.habitof6.web.dto.RegisterUserDto;
-import com.moses33.habitof6.web.dto.UserInfoDto;
+import com.moses33.habitof6.web.dto.auth.LoginDto;
+import com.moses33.habitof6.web.dto.auth.RegisterUserDto;
+import com.moses33.habitof6.web.dto.auth.UserInfoDto;
 import com.moses33.habitof6.web.response.BaseResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

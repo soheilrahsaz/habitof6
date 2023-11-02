@@ -1,6 +1,6 @@
-package com.moses33.habitof6.web.dto;
+package com.moses33.habitof6.web.dto.auth;
 
-import jakarta.validation.constraints.Email;
+
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,7 +10,7 @@ import org.hibernate.validator.constraints.Length;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class RegisterUserDto {
+public class LoginDto {
     @Length(max = 32)
     @NotEmpty
     private String username;
@@ -19,8 +19,4 @@ public class RegisterUserDto {
     @NotEmpty
     private String password;
 
-    @Length(max = 255)
-    @NotEmpty
-    @Email
-    private String email;
 }

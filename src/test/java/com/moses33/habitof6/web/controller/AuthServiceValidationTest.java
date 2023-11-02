@@ -1,7 +1,7 @@
 package com.moses33.habitof6.web.controller;
 
-import com.moses33.habitof6.web.dto.LoginDto;
-import com.moses33.habitof6.web.dto.RegisterUserDto;
+import com.moses33.habitof6.web.dto.auth.LoginDto;
+import com.moses33.habitof6.web.dto.auth.RegisterUserDto;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.hamcrest.core.Is;
 import org.junit.jupiter.api.Test;

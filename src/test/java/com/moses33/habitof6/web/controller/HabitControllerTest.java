@@ -1,7 +1,7 @@
 package com.moses33.habitof6.web.controller;
 
-import com.moses33.habitof6.web.dto.HabitDirectionDto;
-import com.moses33.habitof6.web.dto.HabitDto;
+import com.moses33.habitof6.web.dto.habit.CreateHabitDto;
+import com.moses33.habitof6.web.dto.habit.HabitDirectionDto;
 import org.hamcrest.core.Is;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,7 +21,7 @@ class HabitControllerTest extends BaseTest{
     @Test
     @WithUserDetails(username1)
     void testAddHabit() throws Exception{
-        HabitDto habitDto = HabitDto.builder()
+        CreateHabitDto habitDto = CreateHabitDto.builder()
                 .name("Eat")
                 .colorHex("#658453")
                 .direction(HabitDirectionDto.ASC)
@@ -35,7 +35,7 @@ class HabitControllerTest extends BaseTest{
     @Test
     @WithUserDetails(username1)
     void testInvalidHabit() throws Exception{
-        HabitDto habitDto = HabitDto.builder()
+        CreateHabitDto habitDto = CreateHabitDto.builder()
                 .name("Eat")
                 .colorHex("invalid")
                 .direction(HabitDirectionDto.ASC)
@@ -51,7 +51,7 @@ class HabitControllerTest extends BaseTest{
     @Test
     @WithUserDetails(username1)
     void testInvalidDays() throws Exception{
-        HabitDto habitDto = HabitDto.builder()
+        CreateHabitDto habitDto = CreateHabitDto.builder()
                 .name("Eat")
                 .colorHex("#123456")
                 .direction(HabitDirectionDto.ASC)

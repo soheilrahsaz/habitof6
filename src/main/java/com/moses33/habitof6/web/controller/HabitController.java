@@ -1,7 +1,8 @@
 package com.moses33.habitof6.web.controller;
 
 import com.moses33.habitof6.service.HabitService;
-import com.moses33.habitof6.web.dto.HabitDto;
+import com.moses33.habitof6.web.dto.habit.CreateHabitDto;
+import com.moses33.habitof6.web.dto.habit.HabitDto;
 import com.moses33.habitof6.web.response.BaseResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -27,9 +28,9 @@ public class HabitController {
 
     @PostMapping
     @PreAuthorize("hasAuthority('habit.create')")
-    public BaseResponse<HabitDto> addHabit(@RequestBody @Valid HabitDto habitDto)
+    public BaseResponse<HabitDto> addHabit(@RequestBody @Valid CreateHabitDto createHabitDto)
     {
-        return new BaseResponse<>(habitService.addHabit(habitDto), HttpStatus.CREATED);
+        return new BaseResponse<>(habitService.addHabit(createHabitDto), HttpStatus.CREATED);
     }
 
     private PageRequest getPageRequest(Integer pageNumber, Integer pageSize)
