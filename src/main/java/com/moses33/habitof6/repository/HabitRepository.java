@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.Optional;
 
 public interface HabitRepository extends JpaRepository<Habit, Integer> {
+    long deleteByIdAndUser_Id(Integer id, Integer userId);
 
     @Query("select h from Habit h where h.user.id = ?#{principal.id}")
     Page<Habit> findHabitsSecure(Pageable pageable);
@@ -16,4 +17,5 @@ public interface HabitRepository extends JpaRepository<Habit, Integer> {
     Optional<Habit> findByIdAndUser_Id(Integer id, Integer userId);
 
     Optional<Habit> findByName(String name);
+
 }

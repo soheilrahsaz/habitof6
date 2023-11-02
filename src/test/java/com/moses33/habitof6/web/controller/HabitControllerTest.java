@@ -145,6 +145,15 @@ class HabitControllerTest extends BaseTest{
         mockMvc.perform(myPut("/{habitId}", habit.getId())
                         .content(objectMapper.writeValueAsString(updateHabitDto)))
                 .andExpect(status().isBadRequest());
+    }
 
+    @Test
+    @WithUserDetails(username1)
+    void testDeleteHabit() throws Exception {
+        Habit habit = getTestHabit();
+
+        mockMvc.perform(myDelete("/{habitId}", habit.getId()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.result", Is.is(Boolean.TRUE)));
     }
 }

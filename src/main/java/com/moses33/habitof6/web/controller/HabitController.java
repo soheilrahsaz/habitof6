@@ -40,6 +40,13 @@ public class HabitController {
         return new BaseResponse<>(habitService.updateHabit(updateHabitDto, habitId), HttpStatus.OK);
     }
 
+    @DeleteMapping("/{habitId}")
+    @PreAuthorize("hasAuthority('habit.delete')")
+    public BaseResponse<Boolean> deleteHabit(@PathVariable Integer habitId)
+    {
+        return new BaseResponse<>(habitService.deleteHabit(habitId));
+    }
+
     private PageRequest getPageRequest(Integer pageNumber, Integer pageSize)
     {
         return PageRequest.of(pageNumber == null ? 0 : 1, Math.max(pageSize == null ? 0 : pageSize, 20));

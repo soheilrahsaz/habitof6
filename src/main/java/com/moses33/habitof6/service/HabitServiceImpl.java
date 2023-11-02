@@ -7,6 +7,7 @@ import com.moses33.habitof6.web.dto.habit.HabitDto;
 import com.moses33.habitof6.web.dto.habit.UpdateHabitDto;
 import com.moses33.habitof6.web.mapper.HabitMapper;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.data.domain.Page;
@@ -51,5 +52,11 @@ public class HabitServiceImpl extends BaseService implements HabitService {
         habit = habitMapper.updateHabitFromUpdateHabitDto(updateHabitDto, habit);
 
         return habitMapper.habitToHabitDto(habitRepository.saveAndFlush(habit));
+    }
+
+    @Override
+    @Transactional
+    public Boolean deleteHabit(Integer habitId) {
+        return habitRepository.deleteByIdAndUser_Id(habitId, getLoggedInUser().getId()) > 0;
     }
 }

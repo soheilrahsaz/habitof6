@@ -12,4 +12,6 @@ public interface HabitService {
     HabitDto addHabit(CreateHabitDto habitDto);
 
     HabitDto updateHabit(UpdateHabitDto updateHabitDto, Integer habitId);
+
+    Boolean deleteHabit(Integer habitId);
 }
