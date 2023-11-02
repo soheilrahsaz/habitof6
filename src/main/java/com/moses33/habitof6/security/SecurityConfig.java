@@ -21,6 +21,7 @@ import org.springframework.security.web.context.SecurityContextRepository;
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
+    //TODO use jwt tokens and remove http basic and session tracking
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
