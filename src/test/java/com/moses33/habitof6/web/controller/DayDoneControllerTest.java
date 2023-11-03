@@ -7,6 +7,7 @@ import com.moses33.habitof6.domain.HabitDirection;
 import com.moses33.habitof6.repository.DayDoneRepository;
 import com.moses33.habitof6.repository.HabitRepository;
 import com.moses33.habitof6.repository.UserRepository;
+import com.moses33.habitof6.web.dto.daydone.AddDayDoneDto;
 import com.moses33.habitof6.web.mapper.DayDoneMapper;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -66,7 +67,7 @@ class DayDoneControllerTest extends BaseTest {
 
     @Test
     @WithUserDetails(username1)
-    void testGetHabits() throws Exception {
+    void testGetDayDones() throws Exception {
         Habit habit = getTestHabit();
         Integer habitId = habit.getId();
         mockMvc.perform(myGetSimple(habitId)
@@ -74,5 +75,34 @@ class DayDoneControllerTest extends BaseTest {
                         .param("pageSize", "5"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.result.content.size()", Matchers.equalTo(5)));
+    }
+
+    @Test
+    @WithUserDetails(username1)
+    void testInvalidAccessToDayDone() throws Exception{
+        mockMvc.perform(myGetSimple(0))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithUserDetails(username1)
+    void testAddDayDone() throws Exception{
+        Habit habit = getTestHabit();
+        AddDayDoneDto addDayDoneDto = AddDayDoneDto.builder()
+                .date(LocalDate.now())
+                .type(DayDoneType.DONE)
+                .build();
+        mockMvc.perform(myPostSimple(habit.getId())
+                .content(objectMapper.writeValueAsString(addDayDoneDto)))
+                .andExpect(status().isOk());
+
+    }
+
+    @Test
+    @WithUserDetails(username1)
+    void testDeleteDayDone() throws Exception{
+        Habit habit = getTestHabit();
+        mockMvc.perform(myDelete("/{date}", habit.getId(), LocalDate.now()))
+                .andExpect(status().isOk());
     }
 }
