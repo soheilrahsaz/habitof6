@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.Optional;
 
 public interface HabitRepository extends JpaRepository<Habit, Integer> {
+    boolean existsByIdAndUser_Id(Integer id, Integer userId);
     long deleteByIdAndUser_Id(Integer id, Integer userId);
 
     @Query("select h from Habit h where h.user.id = ?#{principal.id}")

@@ -9,6 +9,8 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 import org.hibernate.validator.constraints.Length;
 
+import java.util.Set;
+
 @Getter
 @Setter
 @Entity
@@ -35,5 +37,9 @@ public class Habit extends FullEntity{
 
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
+
+    @Singular
+    @OneToMany(mappedBy = "habit", fetch = FetchType.LAZY)
+    private Set<DayDone> dayDones;
 }
 

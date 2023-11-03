@@ -8,7 +8,6 @@ import com.moses33.habitof6.web.response.BaseResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/habit")
 @RequiredArgsConstructor
-public class HabitController {
+public class HabitController extends BaseController{
 
     private final HabitService habitService;
 
@@ -47,8 +46,4 @@ public class HabitController {
         return new BaseResponse<>(habitService.deleteHabit(habitId));
     }
 
-    private PageRequest getPageRequest(Integer pageNumber, Integer pageSize)
-    {
-        return PageRequest.of(pageNumber == null ? 0 : 1, Math.max(pageSize == null ? 0 : pageSize, 20));
-    }
 }
