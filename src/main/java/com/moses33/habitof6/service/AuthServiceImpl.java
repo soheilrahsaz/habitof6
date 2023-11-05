@@ -19,6 +19,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextHolderStrategy;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.stereotype.Service;
@@ -34,10 +35,13 @@ public class AuthServiceImpl extends BaseService implements AuthService {
     private final UserInfoMapper userInfoMapper;
     private final SecurityContextRepository securityContextRepository;
     private final SecurityContextLogoutHandler securityContextLogoutHandler = new SecurityContextLogoutHandler();
+    private final WebAuthenticationDetailsSource webAuthenticationDetailsSource = new WebAuthenticationDetailsSource();
 
     @Override
     public void login(LoginDto loginDto, HttpServletRequest request, HttpServletResponse response) {
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword()));
+        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword());
+        token.setDetails(this.webAuthenticationDetailsSource.buildDetails(request));
+        Authentication authentication = authenticationManager.authenticate(token);
         SecurityContextHolderStrategy contextHolderStrategy = SecurityContextHolder.getContextHolderStrategy();
         SecurityContext emptyContext = contextHolderStrategy.createEmptyContext();
         emptyContext.setAuthentication(authentication);

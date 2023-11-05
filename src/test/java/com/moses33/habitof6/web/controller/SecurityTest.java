@@ -1,13 +1,16 @@
 package com.moses33.habitof6.web.controller;
 
 import com.moses33.habitof6.domain.User;
+import com.moses33.habitof6.domain.security.LoginFailure;
 import com.moses33.habitof6.repository.UserRepository;
+import com.moses33.habitof6.repository.security.LoginFailureRepository;
 import com.moses33.habitof6.repository.security.RoleRepository;
 import com.moses33.habitof6.web.dto.auth.LoginDto;
 import com.moses33.habitof6.web.dto.auth.RegisterUserDto;
 import jakarta.transaction.Transactional;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.hamcrest.core.Is;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +31,9 @@ class SecurityTest extends BaseTest {
 
     @Autowired
     RoleRepository roleRepository;
+
+    @Autowired
+    LoginFailureRepository loginFailureRepository;
 
     final String password1 = "123456";
     final String email1 = "test@test.com";
@@ -122,5 +128,22 @@ class SecurityTest extends BaseTest {
     void testLogout() throws Exception {
         mockMvc.perform(myGet("/logout"))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    @Transactional
+    void testLoginFailureTracking() throws Exception{
+        final String testIp = "166.166.166.166";
+        loginFailureRepository.deleteBySourceIp(testIp);
+        loginFailureRepository.flush();
+        LoginDto loginDto = new LoginDto("invalid", "user");
+        mockMvc.perform(myPost("/login")
+                        .with(request -> {
+                            request.setRemoteAddr(testIp);
+                            return  request;
+                        })
+                .content(objectMapper.writeValueAsString(loginDto)));
+        LoginFailure loginFailure = loginFailureRepository.findBySourceIp(testIp).orElseThrow();
+        Assertions.assertEquals(1, loginFailure.getWrongAttempts());
     }
 }
