@@ -29,7 +29,6 @@ public class FullEntity extends BaseEntity{
     private Timestamp createdDate;
 
     @UpdateTimestamp
-    @Column(updatable = false)
     private Timestamp lastModifiedDate;
 
     @Override
