@@ -17,7 +17,8 @@ import java.time.Instant;
 @RequiredArgsConstructor
 public class AuthenticationListener {
     private final LoginFailureRepository loginFailureRepository;
-    public static final Integer MAX_WRONG_ATTEMPTS = 0;
+    public static final Integer MAX_WRONG_ATTEMPTS = 5;
+    public static final Long BLOCK_TIME_MILIES = 3 * 60 * 1000L;
 
     @EventListener
     @Transactional
@@ -29,10 +30,19 @@ public class AuthenticationListener {
         LoginFailure loginFailure = loginFailureRepository.findBySourceIp(sourceIp).orElseGet(() -> LoginFailure.builder()
                 .sourceIp(sourceIp)
                 .build());
-        loginFailure.setWrongAttempts(loginFailure.getWrongAttempts() + 1);
+
+        if(loginFailure.getLastModifiedDate() == null || loginFailure.getLastModifiedDate().after(Timestamp.from(Instant.now().minusMillis(BLOCK_TIME_MILIES))))
+        {//increment only if the last attempt happened after BLOCK_TIME_MILIES
+            loginFailure.setWrongAttempts(loginFailure.getWrongAttempts() + 1);
+        }else
+        {
+            loginFailure.setWrongAttempts(0);
+        }
+
         if(loginFailure.getWrongAttempts() >= MAX_WRONG_ATTEMPTS)
         {
-            loginFailure.setBlockDatetime(Timestamp.from(Instant.now()));
+            loginFailure.setBlockDatetime(new Timestamp(System.currentTimeMillis()+BLOCK_TIME_MILIES));
+            loginFailure.setWrongAttempts(0);//reset
         }
         this.loginFailureRepository.save(loginFailure);
     }

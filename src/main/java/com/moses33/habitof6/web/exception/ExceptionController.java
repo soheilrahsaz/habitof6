@@ -5,6 +5,7 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -21,6 +22,11 @@ public class ExceptionController {
     public BaseResponse<Object> handleUserFriendlyException(UserFriendlyException userFriendlyException)
     {
         return new BaseResponse<>(userFriendlyException.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+    @ExceptionHandler(AuthenticationException.class)
+    public BaseResponse<Object> handleUserFriendlyException(AuthenticationException authenticationException)
+    {
+        return new BaseResponse<>(authenticationException.getMessage(), HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(OptimisticLockingFailureException.class)

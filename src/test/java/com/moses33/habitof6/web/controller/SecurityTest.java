@@ -20,6 +20,9 @@ import org.springframework.security.test.context.support.TestExecutionEvent;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.annotation.Commit;
 
+import java.sql.Timestamp;
+import java.time.Instant;
+
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -46,6 +49,7 @@ class SecurityTest extends BaseTest {
     @Commit
     @BeforeEach
     void setupUser() {
+
         if (userRepository.findWithRolesByUsername(username1).isEmpty()) {
             userRepository.saveAndFlush(User.builder()
                     .username(username1)
@@ -89,19 +93,19 @@ class SecurityTest extends BaseTest {
 
         RegisterUserDto registerUserDto = new RegisterUserDto(username1, RandomStringUtils.randomAlphabetic(32),
                 RandomStringUtils.randomAlphabetic(32) + "@testmail.com");
-        
+
         mockMvc.perform(myPost("/register")
                         .content(objectMapper.writeValueAsString(registerUserDto)))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.error", org.hamcrest.core.StringContains.containsString("Username")));
     }
-    
+
     @Test
     void testDuplicateEmailRegister() throws Exception {
-        
+
         RegisterUserDto registerUserDto = new RegisterUserDto(RandomStringUtils.randomAlphabetic(32), RandomStringUtils.randomAlphabetic(32),
-                 email1);
-        
+                email1);
+
         mockMvc.perform(myPost("/register")
                         .content(objectMapper.writeValueAsString(registerUserDto)))
                 .andExpect(status().isBadRequest())
@@ -132,18 +136,79 @@ class SecurityTest extends BaseTest {
 
     @Test
     @Transactional
-    void testLoginFailureTracking() throws Exception{
+    void testLoginFailureTracking() throws Exception {
         final String testIp = "166.166.166.166";
         loginFailureRepository.deleteBySourceIp(testIp);
         loginFailureRepository.flush();
         LoginDto loginDto = new LoginDto("invalid", "user");
         mockMvc.perform(myPost("/login")
-                        .with(request -> {
-                            request.setRemoteAddr(testIp);
-                            return  request;
-                        })
+                .with(request -> {
+                    request.setRemoteAddr(testIp);
+                    return request;
+                })
                 .content(objectMapper.writeValueAsString(loginDto)));
         LoginFailure loginFailure = loginFailureRepository.findBySourceIp(testIp).orElseThrow();
         Assertions.assertEquals(1, loginFailure.getWrongAttempts());
+    }
+
+    @Test
+    @Transactional
+    void testTooManyFailedLogin() throws Exception {
+        final String testIp = "166.166.166.166";
+
+        //setting too many attempts and removing block time
+        LoginFailure loginFailure = loginFailureRepository.findBySourceIp(testIp)
+                .orElseGet(() -> LoginFailure.builder()
+                        .sourceIp(testIp)
+                        .build());
+        loginFailure.setWrongAttempts(10);
+        loginFailure.setBlockDatetime(null);
+        loginFailureRepository.saveAndFlush(loginFailure);
+
+        //calling one invalid login to get blocked
+        LoginDto loginDto = new LoginDto("invalid", "user");
+        mockMvc.perform(myPost("/login")
+                .with(request -> {
+                    request.setRemoteAddr(testIp);
+                    return request;
+                })
+                .content(objectMapper.writeValueAsString(loginDto)));
+        loginFailure = loginFailureRepository.findBySourceIp(testIp).orElseThrow();
+        Assertions.assertNotNull(loginFailure.getBlockDatetime());
+
+        LoginDto validLogin = new LoginDto(username1, password1);
+        mockMvc.perform(myPost("/login")
+                .with(request -> {
+                    request.setRemoteAddr(testIp);
+                    return request;
+                })
+                .content(objectMapper.writeValueAsString(validLogin)))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.error", Is.is("Too Many Attempts")));
+    }
+
+
+    @Test
+    @Transactional
+    void testTooManyFailedButExpiredLogin() throws Exception {
+        final String testIp = "166.166.166.166";
+
+        //setting some old block time
+        LoginFailure loginFailure = loginFailureRepository.findBySourceIp(testIp)
+                .orElseGet(() -> LoginFailure.builder()
+                        .sourceIp(testIp)
+                        .build());
+        loginFailure.setBlockDatetime(Timestamp.from(Instant.now().minusSeconds(10000)));
+
+        loginFailureRepository.saveAndFlush(loginFailure);
+
+        LoginDto validLogin = new LoginDto(username1, password1);
+        mockMvc.perform(myPost("/login")
+                        .with(request -> {
+                            request.setRemoteAddr(testIp);
+                            return request;
+                        })
+                        .content(objectMapper.writeValueAsString(validLogin)))
+                .andExpect(status().isOk());
     }
 }

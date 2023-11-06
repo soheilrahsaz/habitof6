@@ -3,6 +3,7 @@ package com.moses33.habitof6.service;
 import com.moses33.habitof6.domain.User;
 import com.moses33.habitof6.domain.security.Role;
 import com.moses33.habitof6.repository.UserRepository;
+import com.moses33.habitof6.repository.security.LoginFailureRepository;
 import com.moses33.habitof6.repository.security.RoleRepository;
 import com.moses33.habitof6.web.dto.auth.LoginDto;
 import com.moses33.habitof6.web.dto.auth.RegisterUserDto;
@@ -13,21 +14,27 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextHolderStrategy;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+import java.time.Instant;
+
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl extends BaseService implements AuthService {
 
+    private final LoginFailureRepository loginFailureRepository;
     private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
@@ -39,9 +46,17 @@ public class AuthServiceImpl extends BaseService implements AuthService {
 
     @Override
     public void login(LoginDto loginDto, HttpServletRequest request, HttpServletResponse response) {
+        WebAuthenticationDetails details = this.webAuthenticationDetailsSource.buildDetails(request);
+        if(loginFailureRepository.existsBySourceIpAndBlockDatetimeGreaterThanEqual(details.getRemoteAddress(), Timestamp.from(Instant.now())))
+        {
+            throw new InsufficientAuthenticationException("Too Many Attempts");
+        }
+
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword());
-        token.setDetails(this.webAuthenticationDetailsSource.buildDetails(request));
+        token.setDetails(details);
+
         Authentication authentication = authenticationManager.authenticate(token);
+
         SecurityContextHolderStrategy contextHolderStrategy = SecurityContextHolder.getContextHolderStrategy();
         SecurityContext emptyContext = contextHolderStrategy.createEmptyContext();
         emptyContext.setAuthentication(authentication);
