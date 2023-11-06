@@ -3,6 +3,7 @@ package com.moses33.habitof6.web.controller;
 import com.moses33.habitof6.service.HabitService;
 import com.moses33.habitof6.web.dto.habit.CreateHabitDto;
 import com.moses33.habitof6.web.dto.habit.HabitDto;
+import com.moses33.habitof6.web.dto.habit.HabitFullDto;
 import com.moses33.habitof6.web.dto.habit.UpdateHabitDto;
 import com.moses33.habitof6.web.response.BaseResponse;
 import jakarta.validation.Valid;
@@ -20,8 +21,8 @@ public class HabitController extends BaseController{
     private final HabitService habitService;
 
     @GetMapping
-    public BaseResponse<Page<HabitDto>> getHabits(@RequestParam(required = false) Integer pageNumber,
-                                                  @RequestParam(required = false) Integer pageSize)
+    public BaseResponse<Page<HabitFullDto>> getHabits(@RequestParam(required = false) Integer pageNumber,
+                                                      @RequestParam(required = false) Integer pageSize)
     {
         return new BaseResponse<>(habitService.getHabits(getPageRequest(pageNumber, pageSize)));
     }

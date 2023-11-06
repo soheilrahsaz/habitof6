@@ -5,11 +5,13 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 import org.hibernate.validator.constraints.Length;
 
-import java.util.Set;
+import java.util.List;
 
 @Getter
 @Setter
@@ -39,7 +41,9 @@ public class Habit extends FullEntity{
     private User user;
 
     @Singular
+    @Fetch(FetchMode.SUBSELECT)
     @OneToMany(mappedBy = "habit", fetch = FetchType.LAZY)
-    private Set<DayDone> dayDones;
+    @OrderBy("date DESC")
+    private List<DayDone> dayDones;
 }
 

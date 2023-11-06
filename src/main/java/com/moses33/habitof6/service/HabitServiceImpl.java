@@ -4,6 +4,7 @@ import com.moses33.habitof6.domain.Habit;
 import com.moses33.habitof6.repository.HabitRepository;
 import com.moses33.habitof6.web.dto.habit.CreateHabitDto;
 import com.moses33.habitof6.web.dto.habit.HabitDto;
+import com.moses33.habitof6.web.dto.habit.HabitFullDto;
 import com.moses33.habitof6.web.dto.habit.UpdateHabitDto;
 import com.moses33.habitof6.web.mapper.HabitMapper;
 import jakarta.persistence.EntityNotFoundException;
@@ -23,10 +24,11 @@ public class HabitServiceImpl extends BaseService implements HabitService {
     private final HabitMapper habitMapper;
 
     @Override
-    public Page<HabitDto> getHabits(PageRequest pageRequest) {
+    public Page<HabitFullDto> getHabits(PageRequest pageRequest) {
         Page<Habit> habitPage = habitRepository.findHabitsSecure(pageRequest);
 
-        return new PageImpl<>(habitPage.getContent().stream().map(habitMapper::habitToHabitDto).toList(),
+        //TODO dayDones should be pagable, right!?
+        return new PageImpl<>(habitPage.getContent().stream().map(habitMapper::habitFullDto).toList(),
                 habitPage.getPageable(),
                 habitPage.getTotalElements());
     }

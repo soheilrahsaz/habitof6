@@ -2,10 +2,7 @@ package com.moses33.habitof6.web.mapper;
 
 import com.moses33.habitof6.domain.Habit;
 import com.moses33.habitof6.domain.HabitDirection;
-import com.moses33.habitof6.web.dto.habit.CreateHabitDto;
-import com.moses33.habitof6.web.dto.habit.HabitDirectionDto;
-import com.moses33.habitof6.web.dto.habit.HabitDto;
-import com.moses33.habitof6.web.dto.habit.UpdateHabitDto;
+import com.moses33.habitof6.web.dto.habit.*;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
@@ -13,12 +10,13 @@ import org.mapstruct.MappingTarget;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-@Mapper(uses = DateMapper.class)
+@Mapper(uses = {DateMapper.class, DayDoneMapper.class})
 public abstract class HabitMapper {
     public abstract HabitDirectionDto habitDirectionToHabitDirectionDto(HabitDirection habitDirection);
     public abstract HabitDirection habitDirectionDtoToHabitDirection(HabitDirectionDto habitDirectionDto);
 
     public abstract HabitDto habitToHabitDto(Habit habit);
+    public abstract HabitFullDto habitFullDto(Habit habit);
 
     public abstract Habit createHabitDtoToHabit(CreateHabitDto createHabitDto);
 

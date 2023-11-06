@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@WebMvcTest({UserInfoMapper.class, HabitMapper.class, DateMapper.class})
+@WebMvcTest({UserInfoMapper.class, HabitMapper.class, DateMapper.class, DayDoneMapper.class})
 class MapperTest {
 
     @Autowired
