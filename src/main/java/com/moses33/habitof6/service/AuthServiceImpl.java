@@ -93,6 +93,21 @@ public class AuthServiceImpl extends BaseService implements AuthService {
     }
 
     @Override
+    public UserInfoDto updateUserInfo(UserInfoDto userInfoDto) {
+        User user = userRepository.findById(getLoggedInUser().getId()).orElseThrow();
+        if (userRepository.existsByUsernameAndIdNot(userInfoDto.getUsername(), user.getId())) {
+            throw new UserFriendlyException("Username already exists");
+        }
+
+        if (userRepository.existsByEmailAndIdNot(userInfoDto.getEmail(), user.getId())) {
+            throw new UserFriendlyException("Email already exists");
+        }
+
+        user =  userInfoMapper.updateUserFromUserInfoDto(userInfoDto, user);
+        return this.userInfoMapper.userToUserInfoDto(userRepository.save(user));
+    }
+
+    @Override
     public void logout(HttpServletRequest request, HttpServletResponse response) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication == null)

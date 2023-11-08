@@ -10,5 +10,6 @@ public interface AuthService {
     void login(LoginDto loginDto, HttpServletRequest request, HttpServletResponse response);
     void register(RegisterUserDto registerUserDto, HttpServletRequest request, HttpServletResponse response);
     UserInfoDto getUserInfo();
+    UserInfoDto updateUserInfo(UserInfoDto userInfoDto);
     void logout(HttpServletRequest request, HttpServletResponse response);
 }

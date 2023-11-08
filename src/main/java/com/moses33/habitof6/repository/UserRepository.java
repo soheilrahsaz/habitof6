@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Integer> {
+    boolean existsByEmailAndIdNot(String email, Integer id);
+    boolean existsByUsernameAndIdNot(String username, Integer id);
 
     @EntityGraph(attributePaths = {"roles", "roles.authorities"})
     Optional<User> findWithRolesByUsername(String username);
