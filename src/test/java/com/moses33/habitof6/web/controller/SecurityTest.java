@@ -7,6 +7,7 @@ import com.moses33.habitof6.repository.security.LoginFailureRepository;
 import com.moses33.habitof6.repository.security.RoleRepository;
 import com.moses33.habitof6.web.dto.auth.LoginDto;
 import com.moses33.habitof6.web.dto.auth.RegisterUserDto;
+import com.moses33.habitof6.web.dto.auth.UserInfoDto;
 import jakarta.transaction.Transactional;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.hamcrest.core.Is;
@@ -129,6 +130,23 @@ class SecurityTest extends BaseTest {
 
     @Test
     @WithUserDetails(value = username1, setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    void testUpdateUserInfo() throws Exception {
+        UserInfoDto userInfoDto = UserInfoDto.builder()
+                .username(username1)
+                .email("updatedEmail@email.com")
+                .firstName("myFirstName")
+                .lastName("myLastName")
+                .build();
+
+        mockMvc.perform(myPost("/updateUserInfo")
+                        .content(objectMapper.writeValueAsString(userInfoDto)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.result.firstName", Is.is(userInfoDto.getFirstName())))
+                .andExpect(jsonPath("$.result.lastName", Is.is(userInfoDto.getLastName())));
+    }
+
+    @Test
+    @WithUserDetails(value = username1, setupBefore = TestExecutionEvent.TEST_EXECUTION)
     void testLogout() throws Exception {
         mockMvc.perform(myGet("/logout"))
                 .andExpect(status().isOk());
@@ -178,11 +196,11 @@ class SecurityTest extends BaseTest {
 
         LoginDto validLogin = new LoginDto(username1, password1);
         mockMvc.perform(myPost("/login")
-                .with(request -> {
-                    request.setRemoteAddr(testIp);
-                    return request;
-                })
-                .content(objectMapper.writeValueAsString(validLogin)))
+                        .with(request -> {
+                            request.setRemoteAddr(testIp);
+                            return request;
+                        })
+                        .content(objectMapper.writeValueAsString(validLogin)))
                 .andExpect(status().isUnauthorized())
                 .andExpect(jsonPath("$.error", Is.is("Too Many Attempts")));
     }

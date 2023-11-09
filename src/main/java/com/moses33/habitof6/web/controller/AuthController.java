@@ -39,6 +39,11 @@ public class AuthController {
         return new BaseResponse<>(authService.getUserInfo());
     }
 
+    @PostMapping("/updateUserInfo")
+    public BaseResponse<UserInfoDto> updateUserInfo(@RequestBody @Valid UserInfoDto userInfoDto)
+    {
+        return new BaseResponse<>(authService.updateUserInfo(userInfoDto));
+    }
     @GetMapping("/logout")
     public BaseResponse<Boolean> logout(HttpServletRequest request, HttpServletResponse response)
     {
