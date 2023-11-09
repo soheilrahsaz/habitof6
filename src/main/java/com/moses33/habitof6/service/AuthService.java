@@ -1,5 +1,6 @@
 package com.moses33.habitof6.service;
 
+import com.moses33.habitof6.web.dto.auth.ChangePasswordDto;
 import com.moses33.habitof6.web.dto.auth.LoginDto;
 import com.moses33.habitof6.web.dto.auth.RegisterUserDto;
 import com.moses33.habitof6.web.dto.auth.UserInfoDto;
@@ -12,4 +13,6 @@ public interface AuthService {
     UserInfoDto getUserInfo();
     UserInfoDto updateUserInfo(UserInfoDto userInfoDto);
     void logout(HttpServletRequest request, HttpServletResponse response);
+
+    void changePassword(ChangePasswordDto changePasswordDto);
 }

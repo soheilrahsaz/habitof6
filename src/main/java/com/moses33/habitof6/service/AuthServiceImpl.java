@@ -5,6 +5,7 @@ import com.moses33.habitof6.domain.security.Role;
 import com.moses33.habitof6.repository.UserRepository;
 import com.moses33.habitof6.repository.security.LoginFailureRepository;
 import com.moses33.habitof6.repository.security.RoleRepository;
+import com.moses33.habitof6.web.dto.auth.ChangePasswordDto;
 import com.moses33.habitof6.web.dto.auth.LoginDto;
 import com.moses33.habitof6.web.dto.auth.RegisterUserDto;
 import com.moses33.habitof6.web.dto.auth.UserInfoDto;
@@ -116,5 +117,12 @@ public class AuthServiceImpl extends BaseService implements AuthService {
         }
 
         this.securityContextLogoutHandler.logout(request, response, authentication);
+    }
+
+    @Override
+    public void changePassword(ChangePasswordDto changePasswordDto) {
+        User user = userRepository.findById(getLoggedInUser().getId()).orElseThrow();
+        user.setPassword(this.passwordEncoder.encode(changePasswordDto.getPassword()));
+        this.userRepository.save(user);
     }
 }
