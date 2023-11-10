@@ -13,10 +13,10 @@ import org.hibernate.validator.constraints.Length;
 @PasswordsMatch
 public class ChangePasswordDto {
 
-    @Length(max = 32)
+    @Length(min = 6, max = 32)
     @NotEmpty
     private String password;
-    @Length(max = 32)
+    @Length(min = 6, max = 32)
     @NotEmpty
     private String reTypePassword;
 }

@@ -15,7 +15,7 @@ public class RegisterUserDto {
     @NotEmpty
     private String username;
 
-    @Length(max = 32)
+    @Length(min = 6, max = 32)
     @NotEmpty
     private String password;
 
