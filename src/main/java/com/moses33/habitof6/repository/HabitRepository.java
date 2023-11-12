@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.Optional;
 
 public interface HabitRepository extends JpaRepository<Habit, Integer> {
+    long countByUser_Id(Integer id);
     boolean existsByIdAndUser_Id(Integer id, Integer userId);
     long deleteByIdAndUser_Id(Integer id, Integer userId);
 
