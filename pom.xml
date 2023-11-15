@@ -12,6 +12,7 @@
     <artifactId>Habitof6</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>Habitof6</name>
+    <packaging>war</packaging>
     <description>Habitof6</description>
     <properties>
         <java.version>17</java.version>
@@ -25,6 +26,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+            <scope>provided</scope> <!-- for war packagin. -->
         </dependency>
         <dependency>
             <groupId>org.flywaydb</groupId>
