@@ -20,6 +20,8 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.security.web.context.SecurityContextRepository;
 
+import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
+
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -30,8 +32,8 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()//openApi
-                        .requestMatchers("/auth/register", "/auth/login", "/auth/logout").permitAll()
+                        .requestMatchers(antMatcher("/v3/api-docs/**"), antMatcher("/swagger-ui/**"), antMatcher("/swagger-ui.html")).permitAll()//openApi
+                        .requestMatchers(antMatcher("/auth/register"), antMatcher("/auth/login"), antMatcher("/auth/logout")).permitAll()
                         .anyRequest().authenticated()
                 ).httpBasic(configurer ->
                         configurer.addObjectPostProcessor(new ObjectPostProcessor<BasicAuthenticationFilter>() {
