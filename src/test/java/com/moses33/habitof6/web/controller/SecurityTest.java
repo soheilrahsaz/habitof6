@@ -5,10 +5,8 @@ import com.moses33.habitof6.domain.security.LoginFailure;
 import com.moses33.habitof6.repository.UserRepository;
 import com.moses33.habitof6.repository.security.LoginFailureRepository;
 import com.moses33.habitof6.repository.security.RoleRepository;
-import com.moses33.habitof6.web.dto.auth.ChangePasswordDto;
 import com.moses33.habitof6.web.dto.auth.LoginDto;
 import com.moses33.habitof6.web.dto.auth.RegisterUserDto;
-import com.moses33.habitof6.web.dto.auth.UserInfoDto;
 import jakarta.transaction.Transactional;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.hamcrest.core.Is;
@@ -118,44 +116,6 @@ class SecurityTest extends BaseTest {
     void invalidGetUserInfo() throws Exception {
         mockMvc.perform(myGet("/getUserInfo"))
                 .andExpect(status().isUnauthorized());
-    }
-
-    @Test
-    @WithUserDetails(value = username1, setupBefore = TestExecutionEvent.TEST_EXECUTION)
-    void testValidGetUserInfo() throws Exception {
-
-        mockMvc.perform(myGet("/getUserInfo"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.result.username", Is.is(username1)));
-    }
-
-    @Test
-    @WithUserDetails(value = username1, setupBefore = TestExecutionEvent.TEST_EXECUTION)
-    void testUpdateUserInfo() throws Exception {
-        UserInfoDto userInfoDto = UserInfoDto.builder()
-                .username(username1)
-                .email("test@test.com")
-                .firstName("myFirstName")
-                .lastName("myLastName")
-                .build();
-
-        mockMvc.perform(myPost("/updateUserInfo")
-                        .content(objectMapper.writeValueAsString(userInfoDto)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.result.firstName", Is.is(userInfoDto.getFirstName())))
-                .andExpect(jsonPath("$.result.lastName", Is.is(userInfoDto.getLastName())));
-    }
-    @Test
-    @WithUserDetails(value = username1, setupBefore = TestExecutionEvent.TEST_EXECUTION)
-    void testChangePassword() throws Exception {
-        ChangePasswordDto changePasswordDto = ChangePasswordDto.builder()
-                .password(password1)
-                .reTypePassword(password1)
-                .build();
-
-        mockMvc.perform(myPost("/changePassword")
-                        .content(objectMapper.writeValueAsString(changePasswordDto)))
-                .andExpect(status().isOk());
     }
 
     @Test

@@ -1,10 +1,8 @@
 package com.moses33.habitof6.web.controller;
 
 import com.moses33.habitof6.service.AuthService;
-import com.moses33.habitof6.web.dto.auth.ChangePasswordDto;
 import com.moses33.habitof6.web.dto.auth.LoginDto;
 import com.moses33.habitof6.web.dto.auth.RegisterUserDto;
-import com.moses33.habitof6.web.dto.auth.UserInfoDto;
 import com.moses33.habitof6.web.response.BaseResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -31,24 +29,6 @@ public class AuthController {
     public BaseResponse<Boolean> register(@RequestBody @Valid RegisterUserDto registerUserDto, HttpServletRequest request, HttpServletResponse response)
     {
         authService.register(registerUserDto, request, response);
-        return new BaseResponse<>(true);
-    }
-
-    @GetMapping("/getUserInfo")
-    public BaseResponse<UserInfoDto> getUserInfo()
-    {
-        return new BaseResponse<>(authService.getUserInfo());
-    }
-
-    @PostMapping("/updateUserInfo")
-    public BaseResponse<UserInfoDto> updateUserInfo(@RequestBody @Valid UserInfoDto userInfoDto)
-    {
-        return new BaseResponse<>(authService.updateUserInfo(userInfoDto));
-    }
-    @PostMapping("/changePassword")
-    public BaseResponse<Boolean> changePassword(@RequestBody @Valid ChangePasswordDto changePasswordDto)
-    {
-        authService.changePassword(changePasswordDto);
         return new BaseResponse<>(true);
     }
 

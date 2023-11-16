@@ -33,6 +33,15 @@ public abstract class BaseTest {
                 .build();
     }
 
+    public MockHttpServletRequestBuilder myPatchSimple(Object... uriVariables)
+    {
+        return setDefaultConfigs(MockMvcRequestBuilders.patch(getApiBasePath(), uriVariables));
+    }
+    public MockHttpServletRequestBuilder myPatch(String extraPart, Object... uriVariables)
+    {
+        return setDefaultConfigs(MockMvcRequestBuilders.patch(getApiBasePath() + extraPart, uriVariables));
+    }
+
     public MockHttpServletRequestBuilder myPostSimple(Object... uriVariables)
     {
         return setDefaultConfigs(MockMvcRequestBuilders.post(getApiBasePath(), uriVariables));
