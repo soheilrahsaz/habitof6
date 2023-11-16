@@ -9,9 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping(BaseController.API_BASE_PATH+"/user")
 @RequiredArgsConstructor
-public class UserController {
+public class UserController extends BaseController{
     private final AuthService authService;
 
     @GetMapping()

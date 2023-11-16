@@ -18,7 +18,7 @@ class CorsTest extends BaseTest{
      */
     @Test
     void testEnabledCors() throws Exception {
-        mockMvc.perform(options("/auth//login")
+        mockMvc.perform(options(BaseController.API_BASE_PATH+"/auth/login")
                 .header("Access-Control-Request-Method", "GET")
                 .header("Origin", "someRandomOrigin.com"))
                 .andExpect(status().isOk());

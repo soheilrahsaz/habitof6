@@ -1,5 +1,6 @@
 package com.moses33.habitof6.security;
 
+import com.moses33.habitof6.web.controller.BaseController;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,9 +33,10 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(antMatcher("/v3/api-docs/**"), antMatcher("/swagger-ui/**"), antMatcher("/swagger-ui.html")).permitAll()//openApi
-                        .requestMatchers(antMatcher("/auth/register"), antMatcher("/auth/login"), antMatcher("/auth/logout")).permitAll()
-                        .anyRequest().authenticated()
+//                        .requestMatchers(antMatcher("/v3/api-docs/**"), antMatcher("/swagger-ui/**"), antMatcher("/swagger-ui.html")).permitAll()//openApi
+                        .requestMatchers(antMatcher(BaseController.API_BASE_PATH+"/auth/register"), antMatcher(BaseController.API_BASE_PATH+"/auth/login"), antMatcher(BaseController.API_BASE_PATH+"/auth/logout")).permitAll()
+                        .requestMatchers(antMatcher(BaseController.API_BASE_PATH+"/**")).authenticated()
+                        .anyRequest().permitAll()
                 ).httpBasic(configurer ->
                         configurer.addObjectPostProcessor(new ObjectPostProcessor<BasicAuthenticationFilter>() {
                             @Override

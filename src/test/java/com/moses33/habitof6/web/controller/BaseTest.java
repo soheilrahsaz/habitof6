@@ -35,38 +35,38 @@ public abstract class BaseTest {
 
     public MockHttpServletRequestBuilder myPatchSimple(Object... uriVariables)
     {
-        return setDefaultConfigs(MockMvcRequestBuilders.patch(getApiBasePath(), uriVariables));
+        return setDefaultConfigs(MockMvcRequestBuilders.patch(getFullApiBasePath(), uriVariables));
     }
     public MockHttpServletRequestBuilder myPatch(String extraPart, Object... uriVariables)
     {
-        return setDefaultConfigs(MockMvcRequestBuilders.patch(getApiBasePath() + extraPart, uriVariables));
+        return setDefaultConfigs(MockMvcRequestBuilders.patch(getFullApiBasePath() + extraPart, uriVariables));
     }
 
     public MockHttpServletRequestBuilder myPostSimple(Object... uriVariables)
     {
-        return setDefaultConfigs(MockMvcRequestBuilders.post(getApiBasePath(), uriVariables));
+        return setDefaultConfigs(MockMvcRequestBuilders.post(getFullApiBasePath(), uriVariables));
     }
     public MockHttpServletRequestBuilder myPost(String extraPart, Object... uriVariables)
     {
-        return setDefaultConfigs(MockMvcRequestBuilders.post(getApiBasePath() + extraPart, uriVariables));
+        return setDefaultConfigs(MockMvcRequestBuilders.post(getFullApiBasePath() + extraPart, uriVariables));
     }
     public MockHttpServletRequestBuilder myPut(String extraPart, Object... uriVariables)
     {
-        return setDefaultConfigs(MockMvcRequestBuilders.put(getApiBasePath() + extraPart, uriVariables));
+        return setDefaultConfigs(MockMvcRequestBuilders.put(getFullApiBasePath() + extraPart, uriVariables));
     }
     public MockHttpServletRequestBuilder myDelete(String extraPart, Object... uriVariables)
     {
-        return setDefaultConfigs(MockMvcRequestBuilders.delete(getApiBasePath() + extraPart, uriVariables));
+        return setDefaultConfigs(MockMvcRequestBuilders.delete(getFullApiBasePath() + extraPart, uriVariables));
     }
 
     public MockHttpServletRequestBuilder myGetSimple(Object... uriVariables)
     {
-        return setDefaultConfigs(MockMvcRequestBuilders.get(getApiBasePath(), uriVariables));
+        return setDefaultConfigs(MockMvcRequestBuilders.get(getFullApiBasePath(), uriVariables));
     }
 
     public MockHttpServletRequestBuilder myGet(String urlTemplate, Object... uriVariables)
     {
-        return setDefaultConfigs(MockMvcRequestBuilders.get(getApiBasePath() + urlTemplate, uriVariables));
+        return setDefaultConfigs(MockMvcRequestBuilders.get(getFullApiBasePath() + urlTemplate, uriVariables));
     }
 
     private MockHttpServletRequestBuilder setDefaultConfigs(MockHttpServletRequestBuilder mockHttpServletRequestBuilder)
@@ -79,6 +79,12 @@ public abstract class BaseTest {
     {
         return jsonPath("$.error", Is.is(substr));
     }
+
+    private String getFullApiBasePath()
+    {
+        return BaseController.API_BASE_PATH+getApiBasePath();
+    }
+
 
     /**
      * this value is prepended to all request

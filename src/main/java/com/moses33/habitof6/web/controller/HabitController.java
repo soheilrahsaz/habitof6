@@ -14,7 +14,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/habit")
+@RequestMapping(BaseController.API_BASE_PATH+"/habit")
 @RequiredArgsConstructor
 public class HabitController extends BaseController{
 

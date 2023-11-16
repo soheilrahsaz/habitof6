@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 
 @RestController
-@RequestMapping("/habit/{habitId}/dayDone")
+@RequestMapping(BaseController.API_BASE_PATH+"/habit/{habitId}/dayDone")
 @AllArgsConstructor
 public class DayDoneController extends BaseController{
     private final DayDoneService dayDoneService;

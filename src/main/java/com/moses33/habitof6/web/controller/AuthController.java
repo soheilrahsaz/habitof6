@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping(BaseController.API_BASE_PATH+"/auth")
 @AllArgsConstructor
-public class AuthController {
+public class AuthController extends BaseController{
 
     private final AuthService authService;
 
