@@ -5,3 +5,5 @@ A playground to test what I'm learning with Spring but also a real working proje
 This is actually a copy from another site
 
 Client Implementation in React: https://github.com/PrettySimpleDeveloper/Habbits
+
+Api Documentation: http://habitof.soheilrahsaz.ir/swagger-ui/index.html
